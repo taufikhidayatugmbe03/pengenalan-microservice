@@ -5,6 +5,9 @@ import (
 	"log"
 	"net/http"
 
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
+
 	"github.com/gorilla/mux"
 	"github.com/spf13/viper"
 	"github.com/taufikhidayatugmbe03/pengenalan-microservice/menu-service/config"
@@ -17,6 +20,7 @@ func main() {
 		log.Panic(err)
 		return
 	}
+	// db, err := initDB(cfg.Database)
 	router := mux.NewRouter()
 
 	router.Handle("/add-product", http.HandlerFunc(handler.AddMenuHandler))
@@ -27,7 +31,7 @@ func main() {
 	log.Panic(http.ListenAndServe(fmt.Sprintf(":%s", cfg.Port), router))
 }
 
-func getConfig() (config.config, error) {
+func getConfig() (config.Config, error) {
 	viper.AddConfigPath(".")
 	viper.SetConfigType("yml")
 	viper.SetConfigName("config.yml")
@@ -43,4 +47,14 @@ func getConfig() (config.config, error) {
 	}
 
 	return cfg, nil
+}
+
+func initDB(dbConfig config.Database) (*gorm.DB, error) {
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?%s", dbConfig.User, dbConfig.Password, dbConfig.Host, dbConfig.Port, dbConfig.Config)
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if err != nil {
+		return nil, err
+	}
+
+	return db, nil
 }

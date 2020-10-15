@@ -1,5 +1,6 @@
 package config
 
-type config struct {
-	Port string
+type Config struct {
+	Port     string
+	Database Database
 }
