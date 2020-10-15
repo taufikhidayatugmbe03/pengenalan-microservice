@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/taufikhidayat/pengenalan-microservice/menu-service/handler"
+	"github.com/taufikhidayatugmbe23/pengenalan-microservice/menu-service/handler"
 )
 
 func main() {
